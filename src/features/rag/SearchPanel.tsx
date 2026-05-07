@@ -9,6 +9,7 @@ import { search, ApiError } from "@/lib/api-client";
 import { useRAGStore } from "@/stores/useRAGStore";
 
 export function SearchPanel() {
+  const ingestState = useRAGStore((s) => s.ingest);
   const processState = useRAGStore((s) => s.process);
   const setSearch = useRAGStore((s) => s.setSearch);
   const setStage = useRAGStore((s) => s.setStage);
@@ -24,6 +25,7 @@ export function SearchPanel() {
       return search({
         documentId: processState.documentId,
         query,
+        sourceText: ingestState?.rawText,
         topK: 5,
         generateAnswer: true,
       });

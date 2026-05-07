@@ -25,6 +25,7 @@ export type ProcessRagRequest = z.infer<typeof ProcessRagRequestSchema>;
 export const SearchRequestSchema = z.object({
   documentId: z.string().min(1),
   query: z.string().min(1),
+  sourceText: z.string().min(1).optional(),
   topK: z.number().int().positive().max(20).default(5),
   generateAnswer: z.boolean().default(true),
 });

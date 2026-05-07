@@ -1,4 +1,5 @@
 import { modelVersions, readEnv } from "./_lib/env.js";
+import { chunkText } from "./_lib/chunker.js";
 import {
   handleZodError,
   methodGuard,
@@ -11,7 +12,7 @@ import {
 } from "./_lib/http.js";
 import { chatAnswer, embedTexts } from "./_lib/openai.js";
 import { SearchRequestSchema } from "./_lib/schemas.js";
-import { getVectorStore } from "./_lib/vector-store.js";
+import { chunksToRecords, getVectorStore } from "./_lib/vector-store.js";
 
 export default async function handler(req: Req, res: Res) {
   if (!methodGuard(req, res, ["POST"])) return;
@@ -20,9 +21,28 @@ export default async function handler(req: Req, res: Res) {
     const body = await readJson(req, SearchRequestSchema);
     const env = readEnv();
     const store = getVectorStore();
-    const docCount = await store.count(body.documentId);
+    let docCount = await store.count(body.documentId);
+    // Serverless fallback: if no persisted index and sourceText is provided,
+    // build a temporary index for this document within the current invocation.
+    if (docCount === 0 && body.sourceText) {
+      const chunks = await chunkText(body.documentId, body.sourceText, {
+        chunkSize: 600,
+        chunkOverlap: 80,
+      });
+      const embeddings = env.openaiKey
+        ? await embedTexts(chunks.map((c) => c.content))
+        : chunks.map((c) => fakeEmbedding(c.content));
+      const embedded = chunks.map((c, i) => ({ ...c, embedding: embeddings[i]! }));
+      await store.upsert(chunksToRecords(embedded));
+      docCount = await store.count(body.documentId);
+    }
     if (docCount === 0) {
-      return sendError(res, 404, "no_chunks_for_document", `No chunks indexed for documentId=${body.documentId}`);
+      return sendError(
+        res,
+        404,
+        "no_chunks_for_document",
+        `No chunks indexed for documentId=${body.documentId}`,
+      );
     }
 
     const queryEmbedding = env.openaiKey
