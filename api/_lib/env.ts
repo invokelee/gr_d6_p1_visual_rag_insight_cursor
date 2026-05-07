@@ -2,16 +2,20 @@
  * Centralized server-side environment access. Never imported from client code.
  */
 import path from "node:path";
-import { fileURLToPath } from "node:url";
+import fs from "node:fs";
 import dotenv from "dotenv";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, "..", "..");
-
-// Load server env files for local/dev execution.
-dotenv.config({ path: path.join(projectRoot, ".env.local"), override: false });
-dotenv.config({ path: path.join(projectRoot, ".env"), override: false });
+// Load env files for local/dev execution.
+// In Vercel, environment variables are injected by the platform.
+const cwd = process.cwd();
+const envLocalPath = path.join(cwd, ".env.local");
+const envPath = path.join(cwd, ".env");
+if (fs.existsSync(envLocalPath)) {
+  dotenv.config({ path: envLocalPath, override: false });
+}
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath, override: false });
+}
 
 export type AppEnv = {
   openaiKey: string | null;
