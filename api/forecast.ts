@@ -1,5 +1,5 @@
-import { modelVersions } from "./_lib/env";
-import { forecastGbm, type ForecastPoint } from "./_lib/gbm";
+import { modelVersions } from "./_lib/env.js";
+import { forecastGbm, type ForecastPoint } from "./_lib/gbm.js";
 import {
   handleZodError,
   methodGuard,
@@ -9,8 +9,8 @@ import {
   withRequestId,
   type Req,
   type Res,
-} from "./_lib/http";
-import { ForecastRequestSchema } from "./_lib/schemas";
+} from "./_lib/http.js";
+import { ForecastRequestSchema } from "./_lib/schemas.js";
 
 const MONTHS_BY_HORIZON: Record<"3M" | "6M" | "12M", number> = {
   "3M": 3,

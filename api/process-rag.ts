@@ -1,5 +1,5 @@
-import { modelVersions, readEnv } from "./_lib/env";
-import { chunkText } from "./_lib/chunker";
+import { modelVersions, readEnv } from "./_lib/env.js";
+import { chunkText } from "./_lib/chunker.js";
 import {
   handleZodError,
   methodGuard,
@@ -9,10 +9,10 @@ import {
   withRequestId,
   type Req,
   type Res,
-} from "./_lib/http";
-import { embedTexts } from "./_lib/openai";
-import { ProcessRagRequestSchema } from "./_lib/schemas";
-import { chunksToRecords, getVectorStore } from "./_lib/vector-store";
+} from "./_lib/http.js";
+import { embedTexts } from "./_lib/openai.js";
+import { ProcessRagRequestSchema } from "./_lib/schemas.js";
+import { chunksToRecords, getVectorStore } from "./_lib/vector-store.js";
 
 export default async function handler(req: Req, res: Res) {
   if (!methodGuard(req, res, ["POST"])) return;

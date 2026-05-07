@@ -1,7 +1,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { readEnv } from "./env";
-import type { EmbeddingChunk } from "./schemas";
-import { topK as cosineTopK } from "./similarity";
+import { readEnv } from "./env.js";
+import type { EmbeddingChunk } from "./schemas.js";
+import { topK as cosineTopK } from "./similarity.js";
 
 export type VectorRecord = {
   id: string;

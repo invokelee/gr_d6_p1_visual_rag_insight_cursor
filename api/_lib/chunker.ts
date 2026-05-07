@@ -1,5 +1,5 @@
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
-import type { Chunk } from "./schemas";
+import type { Chunk } from "./schemas.js";
 
 export type ChunkerOptions = {
   chunkSize?: number;

@@ -1,4 +1,4 @@
-import { modelVersions, readEnv } from "./_lib/env";
+import { modelVersions, readEnv } from "./_lib/env.js";
 import {
   handleZodError,
   methodGuard,
@@ -8,10 +8,10 @@ import {
   withRequestId,
   type Req,
   type Res,
-} from "./_lib/http";
-import { chatAnswer, embedTexts } from "./_lib/openai";
-import { SearchRequestSchema } from "./_lib/schemas";
-import { getVectorStore } from "./_lib/vector-store";
+} from "./_lib/http.js";
+import { chatAnswer, embedTexts } from "./_lib/openai.js";
+import { SearchRequestSchema } from "./_lib/schemas.js";
+import { getVectorStore } from "./_lib/vector-store.js";
 
 export default async function handler(req: Req, res: Res) {
   if (!methodGuard(req, res, ["POST"])) return;

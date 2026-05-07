@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { modelVersions } from "./_lib/env";
+import { modelVersions } from "./_lib/env.js";
 import {
   handleZodError,
   methodGuard,
@@ -9,9 +9,8 @@ import {
   withRequestId,
   type Req,
   type Res,
-} from "./_lib/http";
-import { estimateTokens } from "./_lib/chunker";
-import { visionExtract } from "./_lib/openai";
+} from "./_lib/http.js";
+import { estimateTokens } from "./_lib/chunker.js";
 
 const MAX_BYTES = 10 * 1024 * 1024;
 
@@ -40,6 +39,7 @@ export default async function handler(req: Req, res: Res) {
     } else if (ctype.startsWith("image/")) {
       kind = "image";
       const base64 = file.data.toString("base64");
+      const { visionExtract } = await import("./_lib/openai.js");
       text = await visionExtract({ imageBase64: base64, contentType: ctype });
     } else if (
       ctype.startsWith("text/") ||

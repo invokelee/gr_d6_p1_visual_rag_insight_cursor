@@ -1,5 +1,5 @@
 import OpenAI from "openai";
-import { readEnv } from "./env";
+import { readEnv } from "./env.js";
 
 let cachedClient: OpenAI | null = null;
 
