@@ -11,6 +11,8 @@ import { useRAGStore } from "@/stores/useRAGStore";
 import { cn } from "@/lib/cn";
 
 const ACCEPTED = ".pdf,.txt,.md,.json,image/png,image/jpeg,image/webp,image/gif";
+// Vercel request payload limits are lower than local dev tolerance.
+const MAX_UPLOAD_BYTES = 4 * 1024 * 1024; // 4MB safe limit
 
 export function SmartDropzone() {
   const setIngest = useRAGStore((s) => s.setIngest);
@@ -38,13 +40,23 @@ export function SmartDropzone() {
   });
 
   const handleFile = useCallback((f: File) => {
+    if (f.size > MAX_UPLOAD_BYTES) {
+      setError(
+        `파일이 너무 큽니다 (${(f.size / 1024 / 1024).toFixed(2)}MB). ` +
+          `Vercel 업로드 제한을 고려해 4MB 이하 파일을 사용해 주세요.`,
+      );
+      setFile(null);
+      setPreview("");
+      return;
+    }
+    setError(null);
     setFile(f);
     if (f.type.startsWith("text/") || f.name.endsWith(".md") || f.name.endsWith(".txt") || f.name.endsWith(".json")) {
       f.text().then((t) => setPreview(t.slice(0, 4000)));
     } else {
       setPreview("");
     }
-  }, []);
+  }, [setError]);
 
   const onDrop = (e: React.DragEvent) => {
     e.preventDefault();

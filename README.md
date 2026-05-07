@@ -57,6 +57,13 @@ vercel dev
 
 > 모든 키는 서버 전용입니다. `VITE_*` 접두사로 노출하지 마세요.
 
+## Vercel 업로드 제한
+
+- Vercel 배포 환경에서는 요청 바디 크기 제한으로 큰 파일 업로드 시
+  `FUNCTION_PAYLOAD_TOO_LARGE` / `Request Entity Too Large`가 발생할 수 있습니다.
+- 현재 앱은 업로드 단계에서 **4MB 초과 파일**을 사전에 차단합니다.
+- 더 큰 파일 처리가 필요하면 Vercel Blob 또는 외부 스토리지 연동 후 서버에서 처리하세요.
+
 ## Supabase 설정 (선택)
 
 ```bash
