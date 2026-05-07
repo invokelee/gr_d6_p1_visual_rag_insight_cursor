@@ -2,12 +2,5 @@
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "vite",
   "buildCommand": "npm run build",
-  "outputDirectory": "dist",
-  "functions": {
-    "api/**/*.ts": {
-      "runtime": "nodejs@20.x",
-      "memory": 1024,
-      "maxDuration": 60
-    }
-  }
+  "outputDirectory": "dist"
 }
