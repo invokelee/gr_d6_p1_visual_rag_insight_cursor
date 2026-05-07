@@ -1,0 +1,7 @@
+api/_lib/__tests__
+dev-server
+node_modules
+.env
+.env.*
+!.env.example
+*.log
